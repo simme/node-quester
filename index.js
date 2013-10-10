@@ -3,6 +3,9 @@
 //
 // Helper module to batch up requests and stuff.
 //
+// @TODO:
+// - [ ] Test format option.
+//
 
 var req = require('./lib/request');
 
@@ -10,10 +13,14 @@ var req = require('./lib/request');
 // ## Create new Client
 //
 // * **base**, base URL of the API.
+// * **options**, options object.
+//   * format: json (default) or form (form encoded). The way post data is sent.
 //
-var Quester = module.exports = function Quester(base) {
+var Quester = module.exports = function Quester(base, options) {
+  options = options || {};
   this.base      = base;
   this.modifiers = {};
+  this.format    = options.format || 'json';
 };
 
 //
