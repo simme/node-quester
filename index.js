@@ -13,7 +13,7 @@ var req = require('./lib/request');
 //
 var Quester = module.exports = function Quester(base) {
   this.base      = base;
-  this.modifiers = [];
+  this.modifiers = {};
 };
 
 //
@@ -23,19 +23,20 @@ var Quester = module.exports = function Quester(base) {
 // request itself will be the first argument, a callback the second. If the
 // callback is passed an error the request batch will be aborted.
 //
+// * **name**, the name of the modifier.
 // * **fn**, the function or array of functions.
 //
-// **Returns** nothin.
+// **Returns** nothing.
 //
-Quester.prototype.addModifier = function addModifier (fn) {
-  if (Array.isArray(fn)) {
+Quester.prototype.addModifier = function addModifier(name, fn) {
+  if (Array.isArray(name)) {
     var self = this;
-    fn.map(function (func) {
-      self.addModifier(func);
+    name.map(function (modifier) {
+      self.addModifier(modifier.name, modifier.fn);
     });
   }
   else {
-    this.modifiers.push(fn);
+    this.modifiers[name] = fn;
   }
 };
 
