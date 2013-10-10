@@ -26,8 +26,8 @@ suite('Quester', function () {
     }
 
     var q = new Quester(base);
-    q.addModifier(test);
-    assert.equal('a', q.modifiers[0]('a'));
+    q.addModifier('test', test);
+    assert.equal('a', q.modifiers.test('a'));
   });
 
   //
@@ -35,14 +35,14 @@ suite('Quester', function () {
   //
   test('Adding array of modifiers work', function () {
     var fns = [
-      function (a) { return a; },
-      function (x) { return x * 2; }
+      { name: 'a', fn: function (a) { return a; } },
+      { name: 'b', fn: function (x) { return x * 2; } }
     ];
     var q = new Quester(base);
     q.addModifier(fns);
 
-    assert.equal('a', q.modifiers[0]('a'));
-    assert.equal(4, q.modifiers[1](2));
+    assert.equal('a', q.modifiers.a('a'));
+    assert.equal(4, q.modifiers.b(2));
   });
 
   //

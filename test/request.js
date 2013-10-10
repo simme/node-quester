@@ -5,6 +5,7 @@
 var assert  = require('assert');
 var http    = require('http');
 var Quester = require('./../index');
+var _       = require('lodash');
 
 var port = 7357;
 var base = 'http://127.0.0.1:' + port;
@@ -95,7 +96,7 @@ suite('Requests', function () {
       .get('/test')
       .post('/foo', { dep: { jsonpath: '0::$.0' } } )
       .execute(function (err, response, requests) {
-        assert.equal(response[2][2], '{"dep":"/dependency?bar=foo"}');
+        assert.equal(response[2].body[2], '{"dep":"/dependency?bar=foo"}');
         done();
       });
   });
@@ -125,10 +126,17 @@ suite('Requests', function () {
 function expected(exp, done) {
   return function (err, response) {
     assert(!err, err);
-    response = response.map(function (json) {
-      if (typeof json === 'string') return JSON.parse(json);
-      else return json;
-    });
+
+    if (Array.isArray(response)) {
+      response = response.map(function (resp) {
+        if (typeof resp.body === 'string') return JSON.parse(resp.body);
+        else return resp.body;
+      });
+    }
+    else {
+      response = [response.body];
+    }
+
     assert.equal(exp.length, response.length, 'Not correct amount of responses.');
     for (var i in exp) {
       assert.equal(exp[i], response[i].join('/'), 'Non matching request.');
