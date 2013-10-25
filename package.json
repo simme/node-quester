@@ -1,10 +1,10 @@
 {
   "name": "quester",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Request helper thingy.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha -u tdd -r spec"
+    "test": "mocha -u tdd -R spec"
   },
   "keywords": [
     "hyperquest",

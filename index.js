@@ -4,7 +4,9 @@
 // Helper module to batch up requests and stuff.
 //
 // @TODO:
-// - [ ] Test format option.
+// - Test format option.
+// - Test post modifiers.
+// - Emit events.
 //
 
 var req = require('./lib/request');
