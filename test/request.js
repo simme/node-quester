@@ -30,7 +30,14 @@ suite('Requests', function () {
           req.method,
           body
         ];
-        res.end(JSON.stringify(parts));
+        if (req.url === '/time') {
+          setTimeout(function () {
+            res.end(JSON.stringify(parts));
+          }, 2000);
+        }
+        else {
+          res.end(JSON.stringify(parts));
+        }
       });
     });
     serv.listen(port, done);
@@ -109,6 +116,29 @@ suite('Requests', function () {
       client.get('/foo', { foo: { jsonpath: 'bar' } }).execute();
       assert(!true);
     } catch (err) { }
+  });
+
+  //
+  // ## Connnection pooling is circumvented
+  //
+  test('Connection pooling is circumvented', function (done) {
+    // 10 requests each taking 2 seconds, should not take more then 3 seconds
+    // 1 extra second to account for processing etc.
+    this.timeout(3 * 1000);
+    client
+      .get('/time')
+      .get('/time')
+      .get('/time')
+      .get('/time')
+      .get('/time')
+      .get('/time')
+      .get('/time')
+      .get('/time')
+      .get('/time')
+      .get('/time')
+      .execute(function (err, response, requests) {
+        done();
+      });
   });
 
 });
